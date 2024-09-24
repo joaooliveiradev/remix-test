@@ -46,7 +46,7 @@ interface PaidInvoice extends InvoiceBase {
   paidDate: string;
 }
 
-type Invoice =
+export type Invoice =
   | InboxInvoice
   | NeedingApprovalInvoice
   | ScheduledInvoice
