@@ -22,13 +22,12 @@ export const loader = async () => {
 export default function Index() {
   const data = useLoaderData<Invoice[]>();
 
-  const inboxData = data.filter(
-    (invoice) => invoice.status === "inbox"
-  ) as Invoice[];
+  const inboxData = data.filter((invoice) => invoice.status === "inbox");
 
   const approvalData = data.filter(
     (invoice) => invoice.status === "needing_approval"
   );
+
   const scheduledData = data.filter(
     (invoice) => invoice.status === "scheduled"
   );

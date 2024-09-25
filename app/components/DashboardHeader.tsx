@@ -43,10 +43,17 @@ const formatCurrency = (amount: number) =>
     currency: "USD",
   }).format(amount);
 
+const getCountByStatus = (data: Invoice[], status: Invoice["status"]) =>
+  data.filter((invoice) => invoice.status === status).length;
+
 const DashboardHeader = ({ data }: DashboardHeaderProps) => {
   const totalOutstanding = getOutstandingAmount(data);
   const overdueData = getOverdueData(data);
   const dueNext7DaysData = getDueNext7DaysData(data);
+
+  const inboxCount = getCountByStatus(data, "inbox");
+  const approvalCount = getCountByStatus(data, "needing_approval");
+  const scheduledCount = getCountByStatus(data, "scheduled");
 
   return (
     <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -61,8 +68,12 @@ const DashboardHeader = ({ data }: DashboardHeaderProps) => {
           <div className="text-[15px] leading-[24px] text-[#535461] group-hover:hidden">
             {formatCurrency(totalOutstanding)}
           </div>
-          <div className="hidden group-hover:flex">
-            3 Inbox · 1 Approval · 2Z Scheduled
+          <div className="hidden group-hover:flex text-[15px] leading-[24px] text-[#535461] gap-1">
+            <span>{inboxCount} Inbox</span>
+            <span className="text-[15px] leading-[24px]">·</span>
+            <span>{approvalCount} Approval</span>
+            <span className="text-[15px] leading-[24px]">·</span>
+            <span>{scheduledCount} Scheduled</span>
           </div>
         </CardContent>
       </Card>
