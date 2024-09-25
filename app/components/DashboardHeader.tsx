@@ -50,14 +50,43 @@ const DashboardHeader = ({ data }: DashboardHeaderProps) => {
 
   return (
     <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
-      <Card>
+      <Card className="group">
         <CardContent>
-          <div className="text-4xl font-bold">{data.length}</div>
+          <div className="text-[28px] leading-[36px] font-[380] text-[#1e1e2a]">
+            {data.length}
+          </div>
           <div className="text-[17px] leading-[28px] font-normal">
             Total Outstanding
           </div>
-          <div className="text-[15px] leading-[24px] text-[#535461]">
+          <div className="text-[15px] leading-[24px] text-[#535461] group-hover:hidden">
             {formatCurrency(totalOutstanding)}
+          </div>
+          <div className="hidden group-hover:flex">
+            3 Inbox · 1 Approval · 2Z Scheduled
+          </div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent className="text-[#70707d]">
+          <div className="text-[28px] leading-[36px] font-[380]">
+            {overdueData.count}
+          </div>
+          <div className="text-[17px] leading-[28px] font-normal">Overdue</div>
+          <div className="text-[15px] leading-[24px]">
+            {formatCurrency(overdueData.totalAmount)}
+          </div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent className="text-[#70707d]">
+          <div className="text-[28px] leading-[36px] font-[380]">
+            {dueNext7DaysData.count}
+          </div>
+          <div className="text-[17px] leading-[28px] font-normal">
+            Due in next 7 days
+          </div>
+          <div className="text-[15px] leading-[24px]">
+            {formatCurrency(dueNext7DaysData.totalAmount)}
           </div>
         </CardContent>
       </Card>

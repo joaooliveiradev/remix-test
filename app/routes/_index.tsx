@@ -34,7 +34,7 @@ export default function Index() {
   );
 
   return (
-    <div className="w-full h-dvh justify-center">
+    <div className="w-full h-dvh justify-center py-8">
       <div className="w-[968px] h-dvh mx-auto flex flex-col gap-8">
         <div className="w-full flex gap-6 items-center">
           <h1 className="text-[28px] leading-[36px] font-normal">Bill Pay</h1>
