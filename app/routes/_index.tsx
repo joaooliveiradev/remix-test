@@ -23,11 +23,9 @@ export default function Index() {
   const data = useLoaderData<Invoice[]>();
 
   const inboxData = data.filter((invoice) => invoice.status === "inbox");
-
   const approvalData = data.filter(
     (invoice) => invoice.status === "needing_approval"
   );
-
   const scheduledData = data.filter(
     (invoice) => invoice.status === "scheduled"
   );
@@ -46,7 +44,7 @@ export default function Index() {
           <Tabs.List className="flex gap-6 text-[#363644] text-sm">
             <Tabs.Trigger
               value="inbox"
-              className="flex gap-2 items-center py-[10px] [&[data-state='active']]:border-b-2 [&[data-state='active']]:border-[#5266eb] hover:border-b-2 hover:border-[#70739338] outline-none"
+              className="flex gap-2 items-center py-[10px] [&[data-state='active']]:border-b-2 [&[data-state='active']]:border-[#5266eb] hover:border-b-2 hover:border-[#70739338] outline-none text-[#70707D] [&[data-state='active']]:text-[#363644] hover:text-[#363644]"
             >
               Bill Inbox
               <div className="px-2 py-0.5 bg-[#7073931a] text-xs rounded-[4px]">
@@ -55,7 +53,7 @@ export default function Index() {
             </Tabs.Trigger>
             <Tabs.Trigger
               value="approval"
-              className="flex gap-2 items-center py-[10px] [&[data-state='active']]:border-b-2 [&[data-state='active']]:border-[#5266eb] hover:border-b-2 hover:border-[#70739338] outline-none"
+              className="flex gap-2 items-center py-[10px] [&[data-state='active']]:border-b-2 [&[data-state='active']]:border-[#5266eb] hover:border-b-2 hover:border-[#70739338] outline-none text-[#70707D] [&[data-state='active']]:text-[#363644] hover:text-[#363644]"
             >
               Bills Needing Approval
               <div className="px-2 py-0.5 bg-[#7073931a] text-xs rounded-[4px]">
@@ -64,16 +62,16 @@ export default function Index() {
             </Tabs.Trigger>
             <Tabs.Trigger
               value="scheduled"
-              className="flex gap-2 items-center py-[10px] [&[data-state='active']]:border-b-2 [&[data-state='active']]:border-[#5266eb] hover:border-b-2 hover:border-[#70739338] outline-none"
+              className="flex gap-2 items-center py-[10px] [&[data-state='active']]:border-b-2 [&[data-state='active']]:border-[#5266eb] hover:border-b-2 hover:border-[#70739338] outline-none text-[#70707D] [&[data-state='active']]:text-[#363644] hover:text-[#363644]"
             >
               Scheduled Bills
               <div className="px-2 py-0.5 bg-[#7073931a] text-xs rounded-[4px]">
                 {scheduledData.length}
               </div>
-            </Tabs.Trigger>{" "}
+            </Tabs.Trigger>
             <Tabs.Trigger
               value="paid"
-              className="flex gap-2 items-center py-[10px] [&[data-state='active']]:border-b-2 [&[data-state='active']]:border-[#5266eb] hover:border-b-2 hover:border-[#70739338] outline-none"
+              className="flex gap-2 items-center py-[10px] [&[data-state='active']]:border-b-2 [&[data-state='active']]:border-[#5266eb] hover:border-b-2 hover:border-[#70739338] outline-none text-[#70707D] [&[data-state='active']]:text-[#363644] hover:text-[#363644]"
             >
               Paid Bills
             </Tabs.Trigger>
