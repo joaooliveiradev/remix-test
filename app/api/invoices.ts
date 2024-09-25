@@ -9,7 +9,7 @@ interface InvoiceBase {
   attachment?: string;
 }
 
-interface InboxInvoice extends InvoiceBase {
+export interface InboxInvoice extends InvoiceBase {
   status: "inbox";
   sentBy?: string;
   uploadedBy?: string;
@@ -83,7 +83,6 @@ export type Invoice =
   | PaidInvoice;
 
 const mockInvoices: Invoice[] = [
-  // Bill Inbox
   {
     id: "1",
     status: "inbox",
