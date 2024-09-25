@@ -66,10 +66,6 @@ export default function Index() {
     }
   };
 
-  const handleDelete = (id: string) => {
-    // Lógica para deletar o invoice
-  };
-
   const invoicesWithoutPaidBills = data.filter(
     (invoice) => invoice.status !== "paid"
   );

@@ -6,7 +6,7 @@ interface InvoiceBase {
   invoiceNumber: string;
   addedOn: string;
   description: string;
-  attachment: string;
+  attachment?: string;
 }
 
 interface InboxInvoice extends InvoiceBase {
@@ -22,6 +22,17 @@ interface InboxInvoice extends InvoiceBase {
 interface NeedingApprovalInvoice extends InvoiceBase {
   status: "needing_approval";
   uploadedBy: string;
+  bank: {
+    name: string;
+    accountNo: string;
+    routingNo: string;
+  };
+  account: {
+    name: string;
+    checking: string;
+  };
+  initiatedOn: string;
+  memo: string;
 }
 
 interface ScheduledInvoice extends InvoiceBase {
@@ -32,7 +43,15 @@ interface ScheduledInvoice extends InvoiceBase {
     title: string;
     content: string;
   };
-  scheduledDate: string;
+  createdBy: string;
+  paymentMethod: string;
+  paymentProgress: string;
+  paymentRule: string;
+  account: {
+    name: string;
+    checking?: string;
+  };
+  recipientMemo: string;
 }
 
 interface PaidInvoice extends InvoiceBase {
@@ -44,6 +63,17 @@ interface PaidInvoice extends InvoiceBase {
     content: string;
   };
   paidDate: string;
+  paymentMethod: string;
+  account: string;
+  paymentTime: string;
+  bankDescription: string;
+  showTrackingHistory?: boolean;
+  mercuryReceipt?: string;
+  GLCode?: string;
+  requestedBy?: string;
+  approvedBy?: string[];
+  reroutedOn?: string;
+  IMAD?: string;
 }
 
 export type Invoice =
@@ -53,14 +83,15 @@ export type Invoice =
   | PaidInvoice;
 
 const mockInvoices: Invoice[] = [
+  // Bill Inbox
   {
     id: "1",
     status: "inbox",
-    dueDate: "Apr 2025",
+    dueDate: "Apr 19, 2025",
     recipient: "Debug LLC",
     amount: 220.0,
     invoiceNumber: "INV-902",
-    addedOn: "Sep 14",
+    addedOn: "Sep 15",
     sentBy: "demo@mercury.com",
     description: "Sales Invoice",
     email: {
@@ -72,11 +103,11 @@ const mockInvoices: Invoice[] = [
   {
     id: "2",
     status: "inbox",
-    dueDate: "Dec 2025",
+    dueDate: "Dec 1, 2025",
     recipient: "Nano Tech LLC",
     amount: 1290.0,
     invoiceNumber: "INV-001",
-    addedOn: "Sep 18",
+    addedOn: "Sep 19",
     uploadedBy: "Jane",
     description: "demo_invoice-after-ocr-3.pdf",
     attachment: "demo_invoice-after-ocr-3.pdf",
@@ -84,11 +115,11 @@ const mockInvoices: Invoice[] = [
   {
     id: "3",
     status: "inbox",
-    dueDate: "Jan 2026",
+    dueDate: "Jan 17, 2026",
     recipient: "Tax Bureau Inc",
     amount: 11600.0,
     invoiceNumber: "INV-883346",
-    addedOn: "Aug 25",
+    addedOn: "Aug 26",
     sentBy: "demo@mercury.com",
     description: "Electricity Invoice",
     email: {
@@ -97,79 +128,145 @@ const mockInvoices: Invoice[] = [
     },
     attachment: "demo_invoice-after-ocr-1.pdf",
   },
-  // Bills Needing Approval (1 invoice)
   {
     id: "4",
     status: "needing_approval",
-    dueDate: "May 2025",
-    recipient: "Alpha Corp",
+    dueDate: "Oct 24, 2024",
+    recipient: "Jason Green",
     amount: 5000.0,
-    invoiceNumber: "INV-500",
-    addedOn: "Sep 20",
-    uploadedBy: "John",
-    description: "Consulting Services",
-    attachment: "invoice_alpha_corp.pdf",
+    invoiceNumber: "123456789",
+    addedOn: "Sep 24",
+    uploadedBy: "Aluna T.",
+    description: "Monthly rent",
+    bank: {
+      name: "HSBC",
+      accountNo: "99990101",
+      routingNo: "123456789",
+    },
+    account: {
+      name: "Ops / Payroll",
+      checking: "••1038",
+    },
+    initiatedOn: "September 25, 2024",
+    memo: "Memo for the recipient: Monthly rent",
+    attachment: "a6760938-0bd...059037379.pdf",
   },
-  // Scheduled Bills (2 invoices)
   {
     id: "5",
     status: "scheduled",
-    dueDate: "Nov 2025",
-    recipient: "Beta LLC",
-    amount: 750.0,
-    invoiceNumber: "INV-750",
-    addedOn: "Sep 22",
-    sentBy: "finance@beta.com",
-    description: "Monthly Subscription",
-    email: {
-      title: "Subscription Invoice",
-      content: "Your monthly subscription invoice is attached.",
+    dueDate: "Oct 25, 2024",
+    recipient: "Domestic Ads",
+    amount: 37.19,
+    invoiceNumber: "INV-005",
+    addedOn: "Nov 25",
+    createdBy: "Jane B.",
+    description: "Recurring payment",
+    paymentMethod: "ACH",
+    paymentProgress: "One time",
+    paymentRule: "Pay once on Oct 25, 2024",
+    account: {
+      name: "Ops / Payroll",
     },
-    attachment: "beta_subscription.pdf",
-    scheduledDate: "Oct 15, 2025",
+    recipientMemo: "Recurring payment memo here",
   },
   {
     id: "6",
     status: "scheduled",
-    dueDate: "Dec 2025",
-    recipient: "Gamma Industries",
-    amount: 1200.0,
-    invoiceNumber: "INV-1200",
-    addedOn: "Sep 25",
-    uploadedBy: "Alice",
-    description: "Equipment Purchase",
-    attachment: "gamma_equipment.pdf",
-    scheduledDate: "Nov 20, 2025",
+    dueDate: "Oct 25, 2024",
+    recipient: "Domestic Ads",
+    amount: 1.99,
+    invoiceNumber: "INV-006",
+    addedOn: "Nov 24",
+    createdBy: "Jane B.",
+    description: "One-time payment",
+    paymentMethod: "Check",
+    paymentProgress: "One time",
+    paymentRule: "Pay once on Oct 25, 2024",
+    account: {
+      name: "AP",
+    },
+    recipientMemo: "Recurring payment memo here",
   },
   {
     id: "7",
     status: "paid",
-    dueDate: "Aug 2025",
-    recipient: "Delta Services",
-    amount: 300.0,
-    invoiceNumber: "INV-300",
-    addedOn: "Sep 10",
-    sentBy: "billing@delta.com",
     description: "Service Charge",
-    email: {
-      title: "Service Invoice",
-      content: "Thank you for using our services.",
-    },
-    attachment: "delta_service.pdf",
-    paidDate: "Sep 15, 2025",
+    paidDate: "Sep 25, 2025",
+    dueDate: "Sep 24, 2025",
+    recipient: "Lighthouse Properties #3431",
+    amount: -5250.0,
+    invoiceNumber: "INV-007",
+    addedOn: "Sep 25",
+    sentBy: "Aluna T.",
+    paymentMethod: "Mercury ACH Payment",
+    account: "AP",
+    paymentTime: "Sep 25 at 7:52AM",
+    bankDescription: "LIGHTHOUSE_9WJFOIRGJWLKT REF#37663",
+    attachment: "jason-purple-mock-bill.pdf",
+    mercuryReceipt: "Mercury receipt",
+    GLCode: "GL Code",
   },
   {
     id: "8",
     status: "paid",
-    dueDate: "Sep 2025",
-    recipient: "Epsilon Co",
-    amount: 950.0,
-    invoiceNumber: "INV-950",
-    addedOn: "Sep 12",
-    uploadedBy: "Bob",
+    dueDate: "Sep 25, 2025",
     description: "Office Supplies",
-    attachment: "epsilon_supplies.pdf",
-    paidDate: "Sep 20, 2025",
+    paidDate: "Sep 25, 2025",
+    recipient: "Nutritionist",
+    amount: -1041.8,
+    invoiceNumber: "INV-008",
+    addedOn: "Sep 25",
+    sentBy: "Aluna T.",
+    paymentMethod: "Intl. Wire",
+    account: "AP",
+    paymentTime: "Sep 25 at 7:51AM",
+    bankDescription:
+      "ALIYAHMCMA_EFXFCF234D3I3 REF#24650; Original name: Aliyah McMahon",
+    attachment: "red-technologies-llc-mock-bill.pdf",
+    mercuryReceipt: "Mercury receipt",
+    GLCode: "GL Code",
+  },
+  {
+    id: "9",
+    status: "paid",
+    dueDate: "Sep 23, 2025",
+    recipient: "Deshaun Moore",
+    amount: -2891.43,
+    description: "Payroll Payment",
+    paidDate: "Sep 23, 2025",
+    invoiceNumber: "INV-009",
+    addedOn: "Sep 23",
+    requestedBy: "Aluna T.",
+    approvedBy: ["Jane B.", "Landon S."],
+    paymentMethod: "Domestic Wire",
+    account: "Ops / Payroll",
+    paymentTime: "Sep 23 at 8:22AM",
+    bankDescription: "DESHAUNMOO_G64CYUGDSFLJU REF#98814",
+    IMAD: "20210101aaaaaaaa000000",
+    attachment: "indigo-technologies-llc-mock-bill.pdf",
+    mercuryReceipt: "Mercury receipt",
+    GLCode: "GL Code",
+  },
+  {
+    id: "10",
+    status: "paid",
+    dueDate: "Sep 18, 2025",
+    recipient: "Jerick Cheung",
+    description: "Check Payment",
+    paidDate: "Sep 24, 2025",
+    amount: -706.7,
+    invoiceNumber: "INV-010",
+    addedOn: "Sep 18",
+    sentBy: "Aluna T.",
+    paymentMethod: "Check Payment",
+    account: "AP",
+    paymentTime: "Sep 18 at 8:22AM",
+    showTrackingHistory: true,
+    reroutedOn: "Sep 24 at 8:22AM",
+    bankDescription: "JERICKCHEU_I3FLKJPOOVZQM REF#12418",
+    attachment: "jason-yellow-mock-bill.pdf",
+    mercuryReceipt: "Mercury receipt",
+    GLCode: "GL Code",
   },
 ];
 
