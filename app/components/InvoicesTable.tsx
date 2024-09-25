@@ -28,12 +28,14 @@ const InvoicesTable = ({ data }: InvoicesTableProps) => {
     }
   };
 
+  const handleDelete = (id: string) => {};
+
   return (
     <table className="w-full">
       <thead className="border-b-[1px] border-b-[#f4f5f9] text-[10px] text-gray-500 font-light">
         <tr>
           {/* Checkbox Column */}
-          <th className="px-4 py-3">
+          <th className="px-4 py-3 text-left">
             <input
               type="checkbox"
               className="form-checkbox h-4 w-4 text-indigo-600"
@@ -42,7 +44,7 @@ const InvoicesTable = ({ data }: InvoicesTableProps) => {
             />
           </th>
           {/* Due Date Column */}
-          <th className="font-medium">
+          <th className="px-4 py-3 text-left font-medium">
             Due Date
             {/* Sort Icon */}
             <svg
@@ -61,11 +63,11 @@ const InvoicesTable = ({ data }: InvoicesTableProps) => {
             </svg>
           </th>
           {/* Unnamed Column */}
-          <th></th>
+          <th className="px-4 py-3 text-left"></th>
           {/* To Column */}
-          <th className="font-medium">To</th>
+          <th className="px-4 py-3 text-left font-medium">To</th>
           {/* Amount Column */}
-          <th className="font-medium">
+          <th className="px-4 py-3 text-left font-medium">
             Amount
             {/* Sort Icon */}
             <svg
@@ -83,10 +85,8 @@ const InvoicesTable = ({ data }: InvoicesTableProps) => {
               />
             </svg>
           </th>
-          {/* Invoice No. Column */}
-          <th className="font-medium">Invoice No.</th>
-          {/* Added On Column */}
-          <th className="font-medium">
+          <th className="px-4 py-3 text-left font-medium">Invoice No.</th>
+          <th className="px-4 py-3 text-left font-medium">
             Added On
             {/* Sort Icon */}
             <svg
@@ -105,7 +105,7 @@ const InvoicesTable = ({ data }: InvoicesTableProps) => {
             </svg>
           </th>
           {/* Actions Column */}
-          <th className="p-4"></th>
+          <th className="p-4 text-left"></th>
         </tr>
       </thead>
       <tbody className="bg-white divide-y divide-gray-200">

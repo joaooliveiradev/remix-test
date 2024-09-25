@@ -2,11 +2,12 @@ import { useLoaderData } from "@remix-run/react";
 import type { MetaFunction } from "@vercel/remix";
 
 import * as Tabs from "@radix-ui/react-tabs";
-
-import { InvoicesTable } from "~/components/InvoicesTable";
+import * as Table from "~/components/Table";
+import { DashboardHeader } from "~/components/DashboardHeader";
 
 import { type Invoice, mockInvoices } from "~/api/invoices";
-import { DashboardHeader } from "~/components/DashboardHeader";
+import { InvoicesTable } from "~/components/InvoicesTable";
+import { useState } from "react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -15,12 +16,12 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export const loader = async () => {
-  return mockInvoices;
-};
+export const loader = async () => mockInvoices;
 
 export default function Index() {
   const data = useLoaderData<Invoice[]>();
+  const [selectedInvoices, setSelectedInvoices] = useState<string[]>([]);
+  const [selectAll, setSelectAll] = useState(false);
 
   const inboxData = data.filter((invoice) => invoice.status === "inbox");
   const approvalData = data.filter(
@@ -29,6 +30,29 @@ export default function Index() {
   const scheduledData = data.filter(
     (invoice) => invoice.status === "scheduled"
   );
+
+  const handleSelectAllChange = () => {
+    if (selectAll) {
+      setSelectedInvoices([]);
+    } else {
+      setSelectedInvoices(inboxData.map((invoice) => invoice.id));
+    }
+    setSelectAll(!selectAll);
+  };
+
+  const handleRowCheckboxChange = (id: string) => {
+    if (selectedInvoices.includes(id)) {
+      setSelectedInvoices(
+        selectedInvoices.filter((invoiceId) => invoiceId !== id)
+      );
+    } else {
+      setSelectedInvoices([...selectedInvoices, id]);
+    }
+  };
+
+  const handleDelete = (id: string) => {
+    // Lógica para deletar o invoice
+  };
 
   return (
     <div className="w-full h-dvh justify-center py-8">
@@ -41,7 +65,7 @@ export default function Index() {
         </div>
         <DashboardHeader data={data} />
         <Tabs.Root className="TabsRoot" defaultValue="inbox">
-          <Tabs.List className="flex gap-6 text-[#363644] text-sm">
+          <Tabs.List className="flex gap-6 text-[#363644] text-xs leading-[20px]">
             <Tabs.Trigger
               value="inbox"
               className="flex gap-2 items-center py-[10px] [&[data-state='active']]:border-b-2 [&[data-state='active']]:border-[#5266eb] hover:border-b-2 hover:border-[#70739338] outline-none text-[#70707D] [&[data-state='active']]:text-[#363644] hover:text-[#363644]"
@@ -77,10 +101,94 @@ export default function Index() {
             </Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content value="inbox" className="mt-6">
-            <InvoicesTable data={inboxData} />
+            <Table.Table className="w-full">
+              <Table.TableHead>
+                <Table.TableRow>
+                  <Table.TableHeadCell className="text-left font-medium">
+                    <input
+                      type="checkbox"
+                      className="form-checkbox h-4 w-4 text-indigo-600"
+                      checked={selectAll}
+                      onChange={handleSelectAllChange}
+                    />
+                  </Table.TableHeadCell>
+                  <Table.TableHeadCell className="text-left font-medium">
+                    Due Date
+                  </Table.TableHeadCell>
+                  <Table.TableHeadCell className="text-left font-medium">
+                    To
+                  </Table.TableHeadCell>
+                  <Table.TableHeadCell className="text-left font-medium">
+                    Amount
+                  </Table.TableHeadCell>
+                  <Table.TableHeadCell className="text-left font-medium">
+                    Invoice No.
+                  </Table.TableHeadCell>
+                  <Table.TableHeadCell className="text-left font-medium">
+                    Added On
+                  </Table.TableHeadCell>
+                  <Table.TableHeadCell className="text-left font-medium">
+                    {" "}
+                  </Table.TableHeadCell>
+                </Table.TableRow>
+              </Table.TableHead>
+              <Table.TableBody>
+                {inboxData.map((invoice) => (
+                  <Table.TableRow
+                    key={invoice.id}
+                    className="group hover:bg-gray-100"
+                  >
+                    <Table.TableCell className="p-4">
+                      <input
+                        type="checkbox"
+                        className="form-checkbox h-4 w-4 text-indigo-600"
+                        checked={selectedInvoices.includes(invoice.id)}
+                        onChange={() => handleRowCheckboxChange(invoice.id)}
+                      />
+                    </Table.TableCell>
+                    <Table.TableCell className="p-4 whitespace-nowrap">
+                      {invoice.dueDate}
+                    </Table.TableCell>
+                    <Table.TableCell className="p-4 whitespace-nowrap">
+                      {invoice.recipient}
+                    </Table.TableCell>
+                    <Table.TableCell className="p-4 whitespace-nowrap">
+                      ${invoice.amount.toFixed(2)}
+                    </Table.TableCell>
+                    <Table.TableCell className="p-4 whitespace-nowrap">
+                      {invoice.invoiceNumber}
+                    </Table.TableCell>
+                    <Table.TableCell className="p-4 whitespace-nowrap">
+                      {invoice.addedOn}
+                    </Table.TableCell>
+                    <Table.TableCell className="p-4 flex items-center justify-end">
+                      <div className="flex space-x-2 opacity-0 group-hover:opacity-100">
+                        <button className="text-red-600 hover:text-red-800">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M6 3a1 1 0 00-1 1v1H3.5a.5.5 0 000 1H4v9a2 2 0 002 2h8a2 2 0 002-2V6h.5a.5.5 0 000-1H15V4a1 1 0 00-1-1H6zm3 4a.5.5 0 011 0v7a.5.5 0 01-1 0V7zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                        <button className="py-1 px-4 bg-[#5266eb] rounded-full text-white text-[15px]">
+                          Review
+                        </button>
+                      </div>
+                    </Table.TableCell>
+                  </Table.TableRow>
+                ))}
+              </Table.TableBody>
+            </Table.Table>
           </Tabs.Content>
           <Tabs.Content value="approval" className="mt-6">
-            approval
+            <InvoicesTable data={inboxData} />
           </Tabs.Content>{" "}
           <Tabs.Content value="scheduled" className="mt-6">
             scheduled bills
