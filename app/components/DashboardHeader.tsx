@@ -1,5 +1,6 @@
 import type { Invoice } from "~/api/invoices";
 import { Card, CardContent } from "~/components/Card";
+import { formatCurrency } from "~/lib/utils";
 
 const getOutstandingAmount = (invoices: Invoice[]) =>
   invoices.reduce((acc, invoice) => acc + invoice.amount, 0);
@@ -32,12 +33,6 @@ const getDueNext7DaysData = (invoices: Invoice[]) => {
     totalAmount: getOutstandingAmount(dueNext7DaysData),
   };
 };
-
-const formatCurrency = (amount: number) =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(amount);
 
 type DashboardHeaderProps = {
   invoices: Invoice[];

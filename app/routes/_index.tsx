@@ -11,6 +11,7 @@ import { type Invoice, mockInvoices } from "~/api/invoices";
 import { InvoicesTable } from "~/components/InvoicesTable";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
+import { formatCurrency } from "~/lib/utils";
 
 export const meta: MetaFunction = () => {
   return [
@@ -80,12 +81,23 @@ export default function Index() {
     }
   };
 
+  const getSelectedInvoiceSum = (): number => {
+    const selectedInvoices = data.filter((invoice) =>
+      selectedInvoicesId.includes(invoice.id)
+    );
+
+    return selectedInvoices.reduce(
+      (total, selectedInvoice) => total + selectedInvoice.amount,
+      0
+    );
+  };
+
   const invoicesWithoutPaidBills = data.filter(
     (invoice) => invoice.status !== "paid"
   );
 
   return (
-    <Toast.Provider swipeDirection="right">
+    <Toast.Provider>
       <div className="w-full justify-center py-8">
         <div className="w-[968px] mx-auto flex flex-col gap-8">
           <div className="w-full flex gap-6 items-center">
@@ -245,23 +257,48 @@ export default function Index() {
               open={openToast}
               onOpenChange={setOpenToast}
               className={clsx(
-                "fixed bottom-[20%] left-1/2 transform w-[600px] h-14 py-[10px] pl-[20px] pr-[10px] shadow-md rounded-[100px] radix-state-open:animate-toast-slide-in",
+                "fixed bottom-[20%] left-[35%] transform -translate-x-1/2 -translate-y-1/2 w-[600px] py-[10px] pl-[20px] pr-[10px] shadow-md rounded-[100px]",
+                "radix-state-open:animate-toast-slide-in",
                 "radix-state-open:animate-toast-slide-in-bottom md:radix-state-open:animate-toast-slide-in-right",
                 "radix-state-closed:animate-toast-hide",
                 "radix-swipe-direction-right:radix-swipe-end:animate-toast-swipe-out-x",
                 "radix-swipe-direction-right:translate-x-radix-toast-swipe-move-x",
                 "radix-swipe-direction-down:radix-swipe-end:animate-toast-swipe-out-y",
                 "radix-swipe-direction-down:translate-y-radix-toast-swipe-move-y",
-                "radix-swipe-cancel:translate-x-0 radix-swipe-cancel:duration-200 radix-swipe-cancel:ease-[ease]"
+                "radix-swipe-cancel:translate-x-0 radix-swipe-cancel:duration-1000 radix-swipe-cancel:ease-[ease]"
               )}
               duration={Infinity}
             >
-              <Toast.Title>teste</Toast.Title>
+              <div className="flex justify-between">
+                <div className="flex gap-2 items-center">
+                  <span className="text-[#363644] text-[15px] leading-[24px]">
+                    {selectedInvoicesId.length}
+                    {selectedInvoicesId.length === 1
+                      ? " invoice "
+                      : " invoices "}
+                    selected
+                  </span>
+                  <span className="text-[#70707d] text-[13px] leading-[20px] font-normal">
+                    {formatCurrency(getSelectedInvoiceSum())} total
+                  </span>
+                </div>
+                <div className="flex gap-2">
+                  <button className="min-w-[80px] py-2 px-8 min-h-[40px] rounded-[26px] text-[#d03275] bg-[#7073930F] hover:bg-[#15161d0f] font-medium text-sm">
+                    Discard
+                  </button>
+                  <button className="min-w-[80px] py-2 px-8 min-h-[40px] rounded-[26px] text-white bg-[#5266EB] hover:bg-[#5063d9] font-medium text-sm">
+                    Review {selectedInvoicesId.length}
+                    {selectedInvoicesId.length === 1
+                      ? " invoice "
+                      : " invoices "}
+                  </button>
+                </div>
+              </div>
             </Toast.Root>
           )}
+          <Toast.Viewport />
         </div>
       </div>
-      <Toast.Viewport />
     </Toast.Provider>
   );
 }
