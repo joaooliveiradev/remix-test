@@ -141,7 +141,6 @@ const mockInvoices: Invoice[] = [
     attachment: "gamma_equipment.pdf",
     scheduledDate: "Nov 20, 2025",
   },
-  // Paid Bills (2 invoices)
   {
     id: "7",
     status: "paid",

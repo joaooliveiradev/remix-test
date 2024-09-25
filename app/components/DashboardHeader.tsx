@@ -1,12 +1,8 @@
 import type { Invoice } from "~/api/invoices";
 import { Card, CardContent } from "~/components/Card";
 
-type DashboardHeaderProps = {
-  data: Invoice[];
-};
-
-const getOutstandingAmount = (data: Invoice[]) =>
-  data.reduce((acc, invoice) => acc + invoice.amount, 0);
+const getOutstandingAmount = (invoices: Invoice[]) =>
+  invoices.reduce((acc, invoice) => acc + invoice.amount, 0);
 
 const getOverdueData = (data: Invoice[]) => {
   const overdueData = data.filter(
@@ -19,8 +15,8 @@ const getOverdueData = (data: Invoice[]) => {
   };
 };
 
-const getDueNext7DaysData = (data: Invoice[]) => {
-  const dueNext7DaysData = data.filter((invoice) => {
+const getDueNext7DaysData = (invoices: Invoice[]) => {
+  const dueNext7DaysData = invoices.filter((invoice) => {
     const now = new Date();
     const sevenDaysFromNow = new Date();
     sevenDaysFromNow.setDate(now.getDate() + 7);
@@ -43,18 +39,22 @@ const formatCurrency = (amount: number) =>
     currency: "USD",
   }).format(amount);
 
-const DashboardHeader = ({ data }: DashboardHeaderProps) => {
-  const totalOutstanding = getOutstandingAmount(data);
-  const overdueData = getOverdueData(data);
-  const dueNext7DaysData = getDueNext7DaysData(data);
+type DashboardHeaderProps = {
+  invoices: Invoice[];
+};
 
-  const inboxCount = data.filter(
+const DashboardHeader = ({ invoices }: DashboardHeaderProps) => {
+  const totalOutstanding = getOutstandingAmount(invoices);
+  const overdueData = getOverdueData(invoices);
+  const dueNext7DaysData = getDueNext7DaysData(invoices);
+
+  const inboxCount = invoices.filter(
     (invoice) => invoice.status === "inbox"
   ).length;
-  const approvalCount = data.filter(
+  const approvalCount = invoices.filter(
     (invoice) => invoice.status === "needing_approval"
   ).length;
-  const scheduledCount = data.filter(
+  const scheduledCount = invoices.filter(
     (invoice) => invoice.status === "scheduled"
   ).length;
 
@@ -63,7 +63,7 @@ const DashboardHeader = ({ data }: DashboardHeaderProps) => {
       <Card className="group">
         <CardContent>
           <div className="text-[28px] leading-[36px] font-[380] text-[#1e1e2a]">
-            {data.length}
+            {invoices.length}
           </div>
           <div className="text-[17px] leading-[28px] font-normal">
             Total Outstanding

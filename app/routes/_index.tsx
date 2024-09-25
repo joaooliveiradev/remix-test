@@ -1,5 +1,5 @@
-import { useLoaderData } from "@remix-run/react";
-import type { MetaFunction } from "@vercel/remix";
+import { redirect, useLoaderData } from "@remix-run/react";
+import type { ActionFunctionArgs, MetaFunction } from "@vercel/remix";
 
 import * as Tabs from "@radix-ui/react-tabs";
 import * as Table from "~/components/Table";
@@ -18,8 +18,24 @@ export const meta: MetaFunction = () => {
 
 export const loader = async () => mockInvoices;
 
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const formData = await request.formData();
+  const invoiceId = formData.get("invoiceId");
+
+  if (typeof invoiceId !== "string") {
+    throw new Error("Wrong id, oops..");
+  }
+  const index = mockInvoices.findIndex((invoice) => invoice.id === invoiceId);
+  if (index !== -1) {
+    mockInvoices.splice(index, 1);
+  }
+
+  return redirect("/");
+};
+
 export default function Index() {
   const data = useLoaderData<Invoice[]>();
+
   const [selectedInvoices, setSelectedInvoices] = useState<string[]>([]);
   const [selectAll, setSelectAll] = useState(false);
 
@@ -54,6 +70,10 @@ export default function Index() {
     // Lógica para deletar o invoice
   };
 
+  const invoicesWithoutPaidBills = data.filter(
+    (invoice) => invoice.status !== "paid"
+  );
+
   return (
     <div className="w-full h-dvh justify-center py-8">
       <div className="w-[968px] h-dvh mx-auto flex flex-col gap-8">
@@ -63,7 +83,7 @@ export default function Index() {
             Add Bill
           </div>
         </div>
-        <DashboardHeader data={data} />
+        <DashboardHeader invoices={invoicesWithoutPaidBills} />
         <Tabs.Root className="TabsRoot" defaultValue="inbox">
           <Tabs.List className="flex gap-6 text-[#363644] text-xs leading-[20px]">
             <Tabs.Trigger
@@ -163,20 +183,27 @@ export default function Index() {
                     </Table.TableCell>
                     <Table.TableCell className="p-4 flex items-center justify-end">
                       <div className="flex space-x-2 opacity-0 group-hover:opacity-100">
-                        <button className="text-red-600 hover:text-red-800">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M6 3a1 1 0 00-1 1v1H3.5a.5.5 0 000 1H4v9a2 2 0 002 2h8a2 2 0 002-2V6h.5a.5.5 0 000-1H15V4a1 1 0 00-1-1H6zm3 4a.5.5 0 011 0v7a.5.5 0 01-1 0V7zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </button>
+                        <form action="/?index" method="post">
+                          <input
+                            type="hidden"
+                            name="invoiceId"
+                            value={invoice.id}
+                          />
+                          <button className="text-red-600 hover:text-red-800">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M6 3a1 1 0 00-1 1v1H3.5a.5.5 0 000 1H4v9a2 2 0 002 2h8a2 2 0 002-2V6h.5a.5.5 0 000-1H15V4a1 1 0 00-1-1H6zm3 4a.5.5 0 011 0v7a.5.5 0 01-1 0V7zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </button>
+                        </form>
                         <button className="py-1 px-4 bg-[#5266eb] rounded-full text-white text-[15px]">
                           Review
                         </button>
