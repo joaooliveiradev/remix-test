@@ -121,6 +121,7 @@ export default function Index() {
               <Table.TableHead>
                 <Table.TableRow>
                   <Table.TableHeadCell className="text-left font-medium">
+                    {/* //toast here */}
                     <input
                       type="checkbox"
                       className="form-checkbox h-4 w-4 text-indigo-600"
@@ -150,9 +151,10 @@ export default function Index() {
               </Table.TableHead>
               <Table.TableBody>
                 {inboxData.map((invoice) => (
+                  // dropdown here
                   <Table.TableRow
                     key={invoice.id}
-                    className="group hover:bg-gray-100"
+                    className="group hover:bg-gray-100 hover:cursor-pointer"
                   >
                     <Table.TableCell className="p-4">
                       <input
