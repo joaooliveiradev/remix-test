@@ -65,7 +65,7 @@ export default function Index() {
     (invoice) => invoice.status === "scheduled"
   );
 
-  const invoicesWithoutPaidBills = data.filter(
+  const dataWithoutPaidBills = data.filter(
     (invoice) => invoice.status !== "paid"
   );
 
@@ -78,7 +78,7 @@ export default function Index() {
             Add Bill
           </div>
         </div>
-        <DashboardHeader invoices={invoicesWithoutPaidBills} />
+        <DashboardHeader invoices={dataWithoutPaidBills} />
         <Tabs.Root className="TabsRoot" defaultValue="inbox">
           <Tabs.List className="flex gap-6 text-[#363644] text-xs leading-[20px]">
             <Tabs.Trigger

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { HTMLAttributes } from "react";
 import { cn } from "~/lib/utils";
 
 type TableProps = {
@@ -49,10 +49,10 @@ const TableBody = ({ children, className }: TableBodyProps) => (
 type TableRowProps = {
   className?: string;
   children: React.ReactNode;
-};
+} & HTMLAttributes<HTMLTableRowElement>;
 
-const TableRow = ({ children, className }: TableRowProps) => (
-  <tr className={cn("border-b-[1px] border-b-[#f4f5f9]", className)}>
+const TableRow = ({ children, className, ...rest }: TableRowProps) => (
+  <tr className={cn("border-b-[1px] border-b-[#f4f5f9]", className)} {...rest}>
     {children}
   </tr>
 );

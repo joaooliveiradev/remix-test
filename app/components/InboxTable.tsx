@@ -9,14 +9,20 @@ import * as Table from "~/components/Table";
 import * as Toast from "@radix-ui/react-toast";
 
 import { formatCurrency } from "~/lib/utils";
+import { act } from "react-dom/test-utils";
 
 type InboxTableProps = {
   inboxData: InboxInvoice[];
 };
 
 const InboxTable = ({ inboxData }: InboxTableProps) => {
-  const [openToast, setOpenToast] = useState<boolean>(false);
   const [selectedInvoicesId, setSelectedInvoicesId] = useState<string[]>([]);
+
+  const [openDropdown, setOpenDropdown] = useState<boolean>(false);
+  const [activeDropdownContent, setActiveDropdownContent] =
+    useState<InboxInvoice | null>(null);
+
+  const [openToast, setOpenToast] = useState<boolean>(false);
 
   useEffect(() => {
     if (selectedInvoicesId.length > 0) {
@@ -26,13 +32,11 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
     }
   }, [selectedInvoicesId]);
 
-  const handleSelectAllCheckboxes = (tableStatus: Invoice["status"]) => {
-    if (tableStatus === "inbox") {
-      if (inboxData.length === selectedInvoicesId.length) {
-        setSelectedInvoicesId([]);
-      } else {
-        setSelectedInvoicesId(inboxData.map((invoice) => invoice.id));
-      }
+  const handleSelectAllCheckboxes = () => {
+    if (inboxData.length === selectedInvoicesId.length) {
+      setSelectedInvoicesId([]);
+    } else {
+      setSelectedInvoicesId(inboxData.map((invoice) => invoice.id));
     }
   };
 
@@ -57,6 +61,18 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
     );
   };
 
+  const handleClickRow = (id: string) => {
+    if (openDropdown) {
+      setOpenDropdown(false);
+    } else {
+      const invoice = inboxData.find((invoice) => invoice.id === id);
+      setActiveDropdownContent(invoice!);
+      setOpenDropdown(true);
+    }
+  };
+
+  console.log({ openDropdown });
+
   return inboxData.length > 0 ? (
     <>
       <Table.Table className="w-full">
@@ -67,7 +83,7 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
                 type="checkbox"
                 className="form-checkbox h-4 w-4 text-indigo-600"
                 checked={selectedInvoicesId.length === inboxData.length}
-                onChange={() => handleSelectAllCheckboxes("inbox")}
+                onChange={() => handleSelectAllCheckboxes()}
               />
             </Table.TableHeadCell>
             <Table.TableHeadCell className="text-left font-medium">
@@ -79,10 +95,20 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
             <Table.TableHeadCell className="text-left font-medium">
               Amount
             </Table.TableHeadCell>
-            <Table.TableHeadCell className="text-left font-medium">
+            <Table.TableHeadCell
+              className={clsx(
+                "text-left font-medium",
+                openDropdown && "hidden"
+              )}
+            >
               Invoice No.
             </Table.TableHeadCell>
-            <Table.TableHeadCell className="text-left font-medium">
+            <Table.TableHeadCell
+              className={clsx(
+                "text-left font-medium",
+                openDropdown && "hidden"
+              )}
+            >
               Added On
             </Table.TableHeadCell>
             <Table.TableHeadCell className="text-left font-medium">
@@ -94,14 +120,16 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
           {inboxData.map((invoice) => (
             <Table.TableRow
               key={invoice.id}
-              className="group hover:bg-gray-100 hover:cursor-pointer"
+              className="w-full group hover:cursor-pointer border-b-[1px] border-b-[#f4f5f9] table-row relative z-10"
+              onClick={() => handleClickRow(invoice.id)}
             >
-              <Table.TableCell className="p-4">
+              <Table.TableCell>
                 <input
                   type="checkbox"
-                  className="form-checkbox h-4 w-4 text-indigo-600"
+                  className="form-checkbox block relative h-4 w-4 p-4 text-indigo-600  z-30 cursor-pointer"
                   checked={selectedInvoicesId.includes(invoice.id)}
                   onChange={() => handleSelectedIndividualCheckbox(invoice.id)}
+                  onClick={(e) => e.stopPropagation()}
                 />
               </Table.TableCell>
               <Table.TableCell className="p-4 whitespace-nowrap">
@@ -113,10 +141,25 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
               <Table.TableCell className="p-4 whitespace-nowrap">
                 ${invoice.amount.toFixed(2)}
               </Table.TableCell>
-              <Table.TableCell className="p-4 whitespace-nowrap">
+              {openDropdown && activeDropdownContent!.id === invoice.id && (
+                <Table.TableCell className="p-4 whitespace-nowrap">
+                  &gt;
+                </Table.TableCell>
+              )}
+              <Table.TableCell
+                className={clsx(
+                  "p-4 whitespace-nowrap",
+                  openDropdown && "hidden"
+                )}
+              >
                 {invoice.invoiceNumber}
               </Table.TableCell>
-              <Table.TableCell className="p-4 whitespace-nowrap">
+              <Table.TableCell
+                className={clsx(
+                  "p-4 whitespace-nowrap",
+                  openDropdown && "hidden"
+                )}
+              >
                 {invoice.addedOn}
               </Table.TableCell>
               <Table.TableCell className="p-4 flex items-center justify-end">
@@ -145,25 +188,55 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
               </Table.TableCell>
             </Table.TableRow>
           ))}
-          {/* <DropdownMenu.Root open={true} defaultOpen={true}>
-            <DropdownMenu.DropdownMenuPortal>
-              <DropdownMenu.Content
-                sideOffset={5}
-                side="right"
-                align="start"
-                className={clsx(
-                  "bg-gray-800 shadow-lg rounded-md p-2 w-64 h-64 z-50",
-                  "radix-side-right:translate-x-2",
-                  "radix-state-open:animate-slide-in",
-                  "radix-state-closed:animate-slide-out"
-                )}
-              >
-                <DropdownMenu.Item>dasds</DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu.DropdownMenuPortal>
-          </DropdownMenu.Root> */}
         </Table.TableBody>
       </Table.Table>
+      {openDropdown && (
+        <div className="absolute bottom-[250px] right-[296px] z-20 w-[32rem] mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+          <div className="p-6 space-y-4">
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Debug LLC
+                </h2>
+                <p className="text-sm text-gray-500">
+                  Sent by demo@mercury.com
+                </p>
+              </div>
+              <span className="text-xl font-bold text-gray-900">-$220.00</span>
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm text-gray-500">Due Apr 19</p>
+              <div>
+                <p className="text-sm font-medium text-gray-700">Invoice #</p>
+                <p className="text-sm text-gray-900">INV-902</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-700">Added on</p>
+                <p className="text-sm text-gray-900">Sep 15</p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-gray-900">Sales Invoice</p>
+              <p className="text-sm text-gray-700">
+                Please pay the following invoice by the due date.
+              </p>
+            </div>
+            <div className="bg-gray-50 p-3 rounded-lg flex items-center space-x-3">
+              <span className="text-sm text-gray-600">
+                demo_invoice-after-ocr-2.pdf
+              </span>
+            </div>
+            <div className="flex justify-end space-x-3">
+              <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Discard
+              </button>
+              <button className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 flex items-center">
+                Review
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {openToast && (
         <Toast.Root
           open={openToast}
