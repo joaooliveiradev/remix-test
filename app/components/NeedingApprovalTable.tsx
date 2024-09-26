@@ -219,7 +219,7 @@ const NeedingApprovalTable = ({
                 <IoCheckmark size="18" color="#33333" />
               </button>
               <Link
-                to="/invoices/demo-invoice-after-ocr.pdf"
+                to="/approve-payment"
                 target="_blank"
                 onClick={() => setOpenToast(false)}
               >
