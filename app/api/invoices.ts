@@ -57,7 +57,7 @@ export interface ScheduledInvoice extends InvoiceBase {
   recipientMemo: string;
 }
 
-interface PaidInvoice extends InvoiceBase {
+export interface PaidInvoice extends InvoiceBase {
   status: "paid";
   sentBy?: string;
   uploadedBy?: string;
@@ -89,7 +89,7 @@ const mockInvoices: Invoice[] = [
   {
     id: "1",
     status: "inbox",
-    dueDate: "Apr 19",
+    dueDate: "Apr 2015",
     recipient: "Debug LLC",
     amount: 220.0,
     invoiceNumber: "INV-902",
@@ -105,7 +105,7 @@ const mockInvoices: Invoice[] = [
   {
     id: "2",
     status: "inbox",
-    dueDate: "Dec 1, 2025",
+    dueDate: "Dec, 2026",
     recipient: "Nano Tech LLC",
     amount: 1290.0,
     invoiceNumber: "INV-001",
@@ -117,7 +117,7 @@ const mockInvoices: Invoice[] = [
   {
     id: "3",
     status: "inbox",
-    dueDate: "Jan 17, 2026",
+    dueDate: "Jan, 2026",
     recipient: "Tax Bureau Inc",
     amount: 11600.0,
     invoiceNumber: "INV-883346",
@@ -217,7 +217,7 @@ const mockInvoices: Invoice[] = [
     paidDate: "Sep 25, 2025",
     dueDate: "Sep 24, 2025",
     recipient: "Lighthouse Properties #3431",
-    amount: -5250.0,
+    amount: 5250.0,
     invoiceNumber: "INV-007",
     addedOn: "Sep 25",
     sentBy: "Aluna T.",
@@ -236,7 +236,7 @@ const mockInvoices: Invoice[] = [
     description: "Office Supplies",
     paidDate: "Sep 25, 2025",
     recipient: "Nutritionist",
-    amount: -1041.8,
+    amount: 1041.8,
     invoiceNumber: "INV-008",
     addedOn: "Sep 25",
     sentBy: "Aluna T.",
@@ -254,7 +254,7 @@ const mockInvoices: Invoice[] = [
     status: "paid",
     dueDate: "Sep 23, 2025",
     recipient: "Deshaun Moore",
-    amount: -2891.43,
+    amount: 2891.43,
     description: "Payroll Payment",
     paidDate: "Sep 23, 2025",
     invoiceNumber: "INV-009",
@@ -277,7 +277,7 @@ const mockInvoices: Invoice[] = [
     recipient: "Jerick Cheung",
     description: "Check Payment",
     paidDate: "Sep 24, 2025",
-    amount: -706.7,
+    amount: 706.7,
     invoiceNumber: "INV-010",
     addedOn: "Sep 18",
     sentBy: "Aluna T.",

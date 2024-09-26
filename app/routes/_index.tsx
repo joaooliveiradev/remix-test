@@ -17,8 +17,10 @@ import {
   type NeedingApprovalInvoice,
   mockInvoices,
   ScheduledInvoice,
+  PaidInvoice,
 } from "~/api/invoices";
 import { ScheduleTable } from "~/components/ScheduleTable";
+import { BillsTable } from "~/components/BillsTable";
 
 export const meta: MetaFunction = () => {
   return [
@@ -74,13 +76,17 @@ export default function Index() {
     (invoice) => invoice.status === "scheduled"
   ) as ScheduledInvoice[];
 
+  const paidData = data.filter(
+    (invoice) => invoice.status === "paid"
+  ) as PaidInvoice[];
+
   const dataWithoutPaidBills = data.filter(
     (invoice) => invoice.status !== "paid"
   );
 
   return (
     <ToastProvider>
-      <div className="w-[968px] mx-auto flex flex-col gap-8">
+      <div className="w-[968px] mx-auto flex flex-col gap-8 py-16">
         <div className="w-full flex gap-6 items-center">
           <h1 className="text-[28px] leading-[36px] font-normal">Bill Pay</h1>
           <div className="bg-[#7073930F] hover:cursor-pointer hover:bg-[#1212160f] px-4 py-1 rounded-full text-[15px] text-[#363644] min-w-[50px]">
@@ -134,7 +140,7 @@ export default function Index() {
             <ScheduleTable scheduleData={scheduledData} />
           </Tabs.Content>
           <Tabs.Content value="paid" className="mt-6">
-            paid
+            <BillsTable billsData={paidData} />
           </Tabs.Content>
         </Tabs.Root>
       </div>
