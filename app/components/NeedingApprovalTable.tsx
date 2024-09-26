@@ -97,6 +97,9 @@ const NeedingApprovalTable = ({
             <Table.TableRow
               key={invoice.id}
               className="w-full group hover:bg-[#7073930f] hover:cursor-pointer border-b-[1px] border-b-[#f4f5f9] table-row"
+              onClick={() => {
+                window.open("/invoices/demo-invoice-after-ocr.pdf", "_blank");
+              }}
             >
               <Table.TableCell>
                 <input
@@ -215,7 +218,11 @@ const NeedingApprovalTable = ({
               >
                 <IoCheckmark size="18" color="#33333" />
               </button>
-              <Link to="/invoices/demo-invoice-after-ocr.pdf" target="_blank">
+              <Link
+                to="/invoices/demo-invoice-after-ocr.pdf"
+                target="_blank"
+                onClick={() => setOpenToast(false)}
+              >
                 <button className="py-2 px-8 flex items-center gap-1 rounded-[26px] text-white bg-[#5266EB] hover:bg-[#5063d9] font-medium text-sm">
                   Review Request
                   <ArrowRight2 className="size-4 text-[40px] font-bold" />
