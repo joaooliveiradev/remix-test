@@ -49,6 +49,7 @@ export interface ScheduledInvoice extends InvoiceBase {
   paymentMethod: string;
   paymentProgress: string;
   paymentRule: string;
+  GLCode: string[];
   account: {
     name: string;
     checking?: string;
@@ -169,6 +170,16 @@ const mockInvoices: Invoice[] = [
     account: {
       name: "Ops / Payroll",
     },
+    GLCode: [
+      "120 - Accounts Receivable",
+      "230 - Eletric Bills",
+      "318 - Unbilled Receivables",
+      "400 - Inventory",
+      "440 - Raw Materials",
+      "503 - Debt Service Prep",
+      "620 - Entertainment",
+      "664 - Utilities",
+    ],
     recipientMemo: "recurring payment memo here",
   },
   {
@@ -187,6 +198,16 @@ const mockInvoices: Invoice[] = [
     account: {
       name: "AP",
     },
+    GLCode: [
+      "120 - Accounts Receivable",
+      "230 - Eletric Bills",
+      "318 - Unbilled Receivables",
+      "400 - Inventory",
+      "440 - Raw Materials",
+      "503 - Debt Service Prep",
+      "620 - Entertainment",
+      "664 - Utilities",
+    ],
     recipientMemo: "recurring payment memo here",
   },
   {

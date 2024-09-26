@@ -5,19 +5,27 @@ import clsx from "clsx";
 import type { ScheduledInvoice } from "~/api/invoices";
 
 import * as Table from "~/components/Table";
+import * as Select from "@radix-ui/react-select";
+
 import React from "react";
 import {
   ArrowDown2,
   ArrowRight2,
+  ArrowUp2,
+  Check,
   DocumentText,
+  DocumentUpload,
+  Edit2,
   Link,
   Link21,
+  Trash,
 } from "iconsax-react";
 import { formatCurrency } from "~/lib/utils";
 
 type ScheduleTableProps = {
   scheduleData: ScheduledInvoice[];
 };
+
 const ScheduleTable = ({ scheduleData }: ScheduleTableProps) => {
   const [selectedInvoicesId, setSelectedInvoicesId] = useState<string[]>([]);
 
@@ -166,24 +174,84 @@ const ScheduleTable = ({ scheduleData }: ScheduleTableProps) => {
               </p>
             </div>
           </div>
-          <div className="flex flex-col justify-between gap-4 px-10 pt-8 pb-6 border-b-[1px] border-[#7073931A]">
-            <div className="flex flex-col gap-1">
+          <div className="flex flex-col justify-between gap-6 px-10 pt-8 pb-6 border-b-[1px] border-[#7073931A]">
+            <div className="flex flex-col gap-2">
               <p className="text-[11px] text-[#535461]">GL Code</p>
-              <div className="relative w-full max-w-xs">
-                <input
-                  type="text"
-                  className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Select an option"
-                  readOnly
-                />
-                <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                  <ArrowDown2 className="w-5 h-5 " color="1e1e2a" />
-                </div>
+              <Select.Root>
+                <Select.Trigger className="flex items-center justify-between w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                  <Select.Value placeholder="Select an option" />
+                  <Select.Icon>
+                    <ArrowDown2 className="w-4 h-4 text-gray-400" />
+                  </Select.Icon>
+                </Select.Trigger>
+                <Select.Portal>
+                  <Select.Content
+                    className="overflow-hidden bg-white rounded-md shadow-lg border border-gray-300"
+                    position="popper"
+                    sideOffset={5}
+                    style={{ zIndex: 9999 }}
+                    side="top"
+                  >
+                    <Select.ScrollUpButton className="flex items-center justify-center h-[25px] bg-white text-gray-700 cursor-default">
+                      <ArrowUp2 size="16" />
+                    </Select.ScrollUpButton>
+                    <Select.Viewport className="p-2">
+                      <Select.Group>
+                        {activeDropdownContent.GLCode.map((glcode) => (
+                          <Select.Item
+                            value={glcode.split(" ").join("").trim()}
+                            className="flex items-center px-2 py-1 text-sm rounded-md cursor-default select-none outline-none focus:bg-gray-100"
+                          >
+                            <Select.ItemText>{glcode}</Select.ItemText>
+                          </Select.Item>
+                        ))}
+                      </Select.Group>
+                    </Select.Viewport>
+                    <Select.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-gray-700 cursor-default">
+                      <ArrowDown2 size="16" />
+                    </Select.ScrollDownButton>
+                  </Select.Content>
+                </Select.Portal>
+              </Select.Root>
+            </div>
+            <div className="flex flex-col gap-2">
+              <p className="text-[11px] text-[#535461]">Internal notes</p>
+              <textarea className="w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none">
+                {activeDropdownContent.recipientMemo}
+              </textarea>
+            </div>
+            <div className="flex flex-col gap-2">
+              <p className="text-[11px] text-[#535461]">Attachments</p>
+              <input
+                type="file"
+                name="upload"
+                id="upload"
+                className="invisible w-0 h-0 button"
+              />
+              <div className="w-full py-4 border-2 border-dashed hover:border-blue-500 border-gray-300 rounded-md bg-white">
+                <label
+                  htmlFor="upload"
+                  className="w-full flex gap-4 px-4 items-center text-center cursor-pointer"
+                >
+                  <DocumentUpload size={14} />
+                  <div className="flex flex-col gap-0.5">
+                    <p className="text-[10px] text-gray-600 mb-1">
+                      Drag and drop here or click to upload
+                    </p>
+                    <p className="text-[10px] text-gray-500">
+                      You may upload PDF, PNG, or JPEG files
+                    </p>
+                  </div>
+                </label>
               </div>
             </div>
           </div>
-          <div className="px-6 py-4">
+          <div className="px-6 py-4 flex justify-between">
             <Link21 className="size-4 text-[#535461]" />
+            <div className="flex gap-4">
+              <Edit2 className="size-4 text-[#535461]" />
+              <Trash className="size-4 text-[#535461]" />
+            </div>
           </div>
         </div>
       )}
