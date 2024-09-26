@@ -8,8 +8,15 @@ import * as Table from "~/components/Table";
 import * as Toast from "@radix-ui/react-toast";
 
 import { formatCurrency } from "~/lib/utils";
-import { ArrowRight2, DocumentText, Link21, Trash } from "iconsax-react";
+import {
+  ArrowRight,
+  ArrowRight2,
+  DocumentText,
+  Link21,
+  Trash,
+} from "iconsax-react";
 import React from "react";
+import { Link } from "@remix-run/react";
 
 type InboxTableProps = {
   inboxData: InboxInvoice[];
@@ -249,35 +256,34 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
                   </p>
                 </div>
               )}
-              <div className="flex gap-2 py-3 px-4 border-[1px] border-[#f4f5f9] rounded-lg items-center cursor-pointer">
-                <div className="w-[80px] h-[40px] bg-[#7073931a] px-1 flex items-center justify-center rounded-md">
-                  <DocumentText className="size-4 text-[#535461]" />
+              <Link to="/invoices/demo-invoice-after-ocr.pdf" target="_blank">
+                <div className="flex gap-2 py-3 px-4 border-[1px] border-[#f4f5f9] rounded-lg items-center cursor-pointer">
+                  <div className="w-[80px] h-[40px] bg-[#7073931a] px-1 flex items-center justify-center rounded-md">
+                    <DocumentText className="size-4 text-[#535461]" />
+                  </div>
+                  <span className="truncate max-h-10 w-[220px] text-[#1e1e2a] text-xs">
+                    demo_invoice-after-ocr-2.pdf
+                  </span>
                 </div>
-                <span className="truncate max-h-10 w-[220px] text-[#1e1e2a] text-xs">
-                  demo_invoice-after-ocr-2.pdf
-                </span>
-              </div>
+              </Link>
             </div>
             <div className="w-full justify-center flex gap-2 py-8 px-10 border-b-[1px] border-[#7073931A]">
               <form action="/?index" method="post">
                 <input
                   type="hidden"
-                  name="invoiceIds"
-                  value={selectedInvoicesId}
+                  name="invoiceId"
+                  value={activeDropdownContent.id}
                 />
                 <button className="min-w-[80px] py-2 px-8 min-h-[40px] rounded-[26px] text-[#d03275] bg-[#7073930F] hover:bg-[#15161d0f] font-medium text-sm">
                   Discard
                 </button>
               </form>
-              <button
-                className="py-2 px-8 flex items-center gap-1 rounded-[26px] text-white bg-[#5266EB] hover:bg-[#5063d9] font-medium text-sm"
-                onClick={() => {
-                  window.open("/invoices/demo-invoice-after-ocr.pdf", "_blank");
-                }}
-              >
-                Review
-                <ArrowRight2 className="w-4 h-4 text-[40px] font-bold" />
-              </button>
+              <Link to="/invoices/demo-invoice-after-ocr.pdf" target="_blank">
+                <button className="py-2 px-8 flex items-center gap-1 rounded-[26px] text-white bg-[#5266EB] hover:bg-[#5063d9] font-medium text-sm">
+                  Review
+                  <ArrowRight2 className="w-4 h-4 text-[40px] font-bold" />
+                </button>
+              </Link>
             </div>
             <div className="px-6 py-4">
               <Link21 className="size-4 text-[#535461]" />
@@ -290,9 +296,10 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
           open={openToast}
           onOpenChange={setOpenToast}
           className={clsx(
-            "fixed bottom-[20%] left-[35%] w-[600px] py-[10px] pl-[20px] pr-[10px] shadow-md rounded-[100px]",
+            "fixed z-[9999px] bottom-[20%] bg-white left-[35%] w-[600px] py-[10px] pl-[20px] pr-[10px] shadow-md rounded-[100px]",
             "radix-state-open:animate-toast-slide-in-right",
-            "radix-state-closed:animate-toast-hide"
+            "radix-state-closed:animate-toast-hide",
+            "z-30 border-[1px] border-[#5b5f6b3d]"
           )}
           duration={Infinity}
         >
@@ -318,15 +325,13 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
                   Discard
                 </button>
               </form>
-              <button
-                className="min-w-[80px] py-2 px-8 min-h-[40px] rounded-[26px] text-white bg-[#5266EB] hover:bg-[#5063d9] font-medium text-sm"
-                onClick={() => {
-                  window.open("/invoices/demo-invoice-after-ocr.pdf", "_blank");
-                }}
-              >
-                Review {selectedInvoicesId.length}
-                {selectedInvoicesId.length === 1 ? " invoice " : " invoices "}
-              </button>
+              <Link to="/invoices/demo-invoice-after-ocr.pdf" target="_blank">
+                <button className="py-2 px-8 flex items-center gap-1 rounded-[26px] text-white bg-[#5266EB] hover:bg-[#5063d9] font-medium text-sm">
+                  Review {selectedInvoicesId.length}
+                  {selectedInvoicesId.length === 1 ? " invoice " : " invoices "}
+                  <ArrowRight className="size-4 text-[40px] font-bold" />
+                </button>
+              </Link>
             </div>
           </div>
         </Toast.Root>
