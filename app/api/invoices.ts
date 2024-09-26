@@ -4,7 +4,7 @@ interface InvoiceBase {
   recipient: string;
   amount: number;
   invoiceNumber: string;
-  addedOn: string;
+  addedOn?: string;
   description: string;
   attachment?: string;
 }
@@ -36,10 +36,11 @@ export interface NeedingApprovalInvoice extends InvoiceBase {
   memo: string;
 }
 
-interface ScheduledInvoice extends InvoiceBase {
+export interface ScheduledInvoice extends InvoiceBase {
   status: "scheduled";
   sentBy?: string;
   uploadedBy?: string;
+  nextPayment: string;
   email?: {
     title: string;
     content: string;
@@ -155,11 +156,11 @@ const mockInvoices: Invoice[] = [
   {
     id: "5",
     status: "scheduled",
-    dueDate: "Oct 25, 2024",
+    dueDate: "Nov 25",
     recipient: "Domestic Ads",
     amount: 37.19,
     invoiceNumber: "INV-005",
-    addedOn: "Nov 25",
+    nextPayment: "Oct 25",
     createdBy: "Jane B.",
     description: "Recurring payment",
     paymentMethod: "ACH",
@@ -168,16 +169,16 @@ const mockInvoices: Invoice[] = [
     account: {
       name: "Ops / Payroll",
     },
-    recipientMemo: "Recurring payment memo here",
+    recipientMemo: "recurring payment memo here",
   },
   {
     id: "6",
     status: "scheduled",
-    dueDate: "Oct 25, 2024",
+    dueDate: "Nov 24",
     recipient: "Domestic Ads",
     amount: 1.99,
     invoiceNumber: "INV-006",
-    addedOn: "Nov 24",
+    nextPayment: "Oct 24",
     createdBy: "Jane B.",
     description: "One-time payment",
     paymentMethod: "Check",
@@ -186,7 +187,7 @@ const mockInvoices: Invoice[] = [
     account: {
       name: "AP",
     },
-    recipientMemo: "Recurring payment memo here",
+    recipientMemo: "recurring payment memo here",
   },
   {
     id: "7",

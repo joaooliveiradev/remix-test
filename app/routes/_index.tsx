@@ -16,7 +16,9 @@ import {
   type InboxInvoice,
   type NeedingApprovalInvoice,
   mockInvoices,
+  ScheduledInvoice,
 } from "~/api/invoices";
+import { ScheduleTable } from "~/components/ScheduleTable";
 
 export const meta: MetaFunction = () => {
   return [
@@ -70,7 +72,7 @@ export default function Index() {
 
   const scheduledData = data.filter(
     (invoice) => invoice.status === "scheduled"
-  );
+  ) as ScheduledInvoice[];
 
   const dataWithoutPaidBills = data.filter(
     (invoice) => invoice.status !== "paid"
@@ -127,9 +129,9 @@ export default function Index() {
           </Tabs.Content>
           <Tabs.Content value="approval" className="mt-6">
             <NeedingApprovalTable needApprovalData={approvalData} />
-          </Tabs.Content>{" "}
+          </Tabs.Content>
           <Tabs.Content value="scheduled" className="mt-6">
-            scheduled bills
+            <ScheduleTable scheduleData={scheduledData} />
           </Tabs.Content>
           <Tabs.Content value="paid" className="mt-6">
             paid

@@ -218,8 +218,10 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
                 <h2 className="text-lg font-semibold text-gray-900">
                   {activeDropdownContent.recipient}
                 </h2>
-                <p className="text-sm text-gray-500">
-                  Sent by {activeDropdownContent.sentBy}
+                <p className="text-[11px] text-gray-500">
+                  {activeDropdownContent.sentBy
+                    ? `Sent by ${activeDropdownContent.sentBy}`
+                    : `Uploaded by ${activeDropdownContent.uploadedBy}`}
                 </p>
               </div>
               <div className="flex flex-col items-center">
