@@ -5,7 +5,6 @@ export default {
   theme: {
     extend: {
       keyframes: {
-        //Toast
         "toast-hide": {
           "0%": { opacity: "1" },
           "100%": { opacity: "0" },
@@ -16,7 +15,6 @@ export default {
         },
       },
       animation: {
-        // Toast
         "toast-hide": "toast-hide 200ms ease-in forwards",
         "toast-slide-in-right":
           "toast-slide-in-right 1000ms cubic-bezier(0.16, 1, 0.3, 1)",

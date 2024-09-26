@@ -184,11 +184,9 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
                         </form>
                         <button
                           className="py-1 px-4 flex items-center gap-1 rounded-[26px] text-white bg-[#5266EB] hover:bg-[#5063d9] text-[15px]"
-                          onClick={() => {
-                            window.open(
-                              "/invoices/demo-invoice-after-ocr.pdf",
-                              "_blank"
-                            );
+                          onClick={(e) => {
+                            window.open("/approve-payment", "_blank");
+                            e.stopPropagation();
                           }}
                         >
                           Review
@@ -282,7 +280,7 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
                   Discard
                 </button>
               </form>
-              <Link to="/invoices/demo-invoice-after-ocr.pdf" target="_blank">
+              <Link to="/approve-payment" target="_blank">
                 <button className="py-2 px-8 flex items-center gap-1 rounded-[26px] text-white bg-[#5266EB] hover:bg-[#5063d9] font-medium text-sm">
                   Review
                   <ArrowRight2 className="w-4 h-4 text-[40px] font-bold" />
@@ -329,7 +327,7 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
                   Discard
                 </button>
               </form>
-              <Link to="/invoices/demo-invoice-after-ocr.pdf" target="_blank">
+              <Link to="/approve-payment" target="_blank">
                 <button className="py-2 px-8 flex items-center gap-1 rounded-[26px] text-white bg-[#5266EB] hover:bg-[#5063d9] font-medium text-sm">
                   Review {selectedInvoicesId.length}
                   {selectedInvoicesId.length === 1 ? " invoice " : " invoices "}

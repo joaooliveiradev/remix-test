@@ -98,7 +98,7 @@ const NeedingApprovalTable = ({
               key={invoice.id}
               className="w-full group hover:bg-[#7073930f] hover:cursor-pointer border-b-[1px] border-b-[#f4f5f9] table-row"
               onClick={() => {
-                window.open("/invoices/demo-invoice-after-ocr.pdf", "_blank");
+                window.open("/approve-payment", "_blank");
               }}
             >
               <Table.TableCell>

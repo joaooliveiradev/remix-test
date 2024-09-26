@@ -1,0 +1,11 @@
+.rpv-default-layout__toolbar {
+  display: none !important;
+}
+
+.rpv-default-layout__sidebar {
+  display: none !important;
+}
+
+.rpv-default-layout__sidebar--ltr {
+  display: none !important;
+}
