@@ -53,7 +53,7 @@ const ScheduleTable = ({ scheduleData }: ScheduleTableProps) => {
   return (
     <div className={clsx("w-full flex gap-6")}>
       <Table.Table
-        className={clsx("w-full", openDropdown.open && "w-[calc(100%-392px)]")}
+        className={clsx("w-full", openDropdown.open && "w-[calc(100%-360px)]")}
       >
         <Table.TableHead>
           <Table.TableRow>
@@ -82,7 +82,7 @@ const ScheduleTable = ({ scheduleData }: ScheduleTableProps) => {
           {scheduleData.map((invoice) => (
             <Table.TableRow
               key={invoice.id}
-              className="w-full group hover:bg-[#7073930f] hover:cursor-pointer border-b-[1px] border-b-[#f4f5f9] table-row"
+              className="relative w-full group hover:bg-[#7073930f] hover:cursor-pointer border-b-[1px] border-b-[#f4f5f9] table-row"
               onClick={() => handleClickRow(invoice.id)}
             >
               <Table.TableCell className="p-4 whitespace-nowrap">
@@ -105,7 +105,7 @@ const ScheduleTable = ({ scheduleData }: ScheduleTableProps) => {
                 </React.Fragment>
               ) : (
                 activeDropdownContent?.id === invoice.id && (
-                  <td className="absolute top-[83px] size-4 flex justify-center items-center animate-toast-slide-in-right">
+                  <td className="absolute top-[48%] size-4 flex justify-center items-center animate-toast-slide-in-right">
                     <ArrowRight2 size={16} color="#1e1e2a" variant="Bold" />
                   </td>
                 )
@@ -117,7 +117,7 @@ const ScheduleTable = ({ scheduleData }: ScheduleTableProps) => {
       {openDropdown.open && activeDropdownContent !== null && (
         <div
           key={activeDropdownContent.id}
-          className="flex flex-col w-[392px] z-20 mx-auto bg-white rounded-xl shadow-md overflow-hidden border-[1px] border-[#5b5f6b3d] animate-toast-slide-in-right"
+          className="flex flex-col w-[360px] z-20 mx-auto bg-white rounded-xl shadow-md overflow-hidden border-[1px] border-[#5b5f6b3d] animate-toast-slide-in-right"
         >
           <div className="w-full flex justify-between items-center px-10 pt-8 pb-6 border-b-[1px] border-[#7073931A]">
             <div>
