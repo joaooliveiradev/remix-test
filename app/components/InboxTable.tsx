@@ -23,6 +23,7 @@ type InboxTableProps = {
 };
 
 const InboxTable = ({ inboxData }: InboxTableProps) => {
+  const [openToast, setOpenToast] = useState<boolean>(false);
   const [selectedInvoicesId, setSelectedInvoicesId] = useState<string[]>([]);
 
   const [openDropdown, setOpenDropdown] = useState<{
@@ -34,8 +35,6 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
   });
   const [activeDropdownContent, setActiveDropdownContent] =
     useState<InboxInvoice | null>(null);
-
-  const [openToast, setOpenToast] = useState<boolean>(false);
 
   useEffect(() => {
     if (selectedInvoicesId.length > 0) {
@@ -132,13 +131,13 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
             {inboxData.map((invoice) => (
               <Table.TableRow
                 key={invoice.id}
-                className="w-full group hover:bg-[#7073930f] hover:cursor-pointer border-b-[1px] border-b-[#f4f5f9] table-row relative z-10"
+                className="w-full group hover:bg-[#7073930f] hover:cursor-pointer border-b-[1px] border-b-[#f4f5f9] table-row"
                 onClick={() => handleClickRow(invoice.id)}
               >
                 <Table.TableCell>
                   <input
                     type="checkbox"
-                    className="form-checkbox block relative h-4 w-4 p-4 text-indigo-600  z-30 cursor-pointer"
+                    className="form-checkbox block relative h-4 w-4 p-4 text-indigo-600 z-30 cursor-pointer"
                     checked={selectedInvoicesId.includes(invoice.id)}
                     onChange={() =>
                       handleSelectedIndividualCheckbox(invoice.id)
@@ -176,10 +175,13 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
                             name="invoiceId"
                             value={invoice.id}
                           />
+                          <button
+                            onClick={(e) => e.stopPropagation()}
+                            className="relative z-120 flex items-center justify-center p-2.5 rounded-full bg-[#7073930f] hover:bg-[#d032751a]"
+                          >
+                            <Trash className="size-3 text-[#d03275] text-center" />
+                          </button>
                         </form>
-                        <div className="flex items-center justify-center p-2.5 rounded-full bg-[#7073930f]">
-                          <Trash className="size-3 text-[#d03275] text-center" />
-                        </div>
                         <button
                           className="py-1 px-4 flex items-center gap-1 rounded-[26px] text-white bg-[#5266EB] hover:bg-[#5063d9] text-[15px]"
                           onClick={() => {

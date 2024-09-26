@@ -19,9 +19,10 @@ export interface InboxInvoice extends InvoiceBase {
   };
 }
 
-interface NeedingApprovalInvoice extends InvoiceBase {
+export interface NeedingApprovalInvoice extends InvoiceBase {
   status: "needing_approval";
   uploadedBy: string;
+  approvals: string;
   bank: {
     name: string;
     accountNo: string;
@@ -135,6 +136,7 @@ const mockInvoices: Invoice[] = [
     amount: 5000.0,
     invoiceNumber: "123456789",
     addedOn: "Sep 24",
+    approvals: "0 of 2",
     uploadedBy: "Aluna T.",
     description: "Monthly rent",
     bank: {

@@ -9,8 +9,14 @@ import {
 
 import { DashboardHeader } from "~/components/DashboardHeader";
 import { InboxTable } from "~/components/InboxTable";
+import { NeedingApprovalTable } from "~/components/NeedingApprovalTable";
 
-import { type Invoice, mockInvoices, InboxInvoice } from "~/api/invoices";
+import {
+  type Invoice,
+  type InboxInvoice,
+  type NeedingApprovalInvoice,
+  mockInvoices,
+} from "~/api/invoices";
 
 export const meta: MetaFunction = () => {
   return [
@@ -60,7 +66,8 @@ export default function Index() {
 
   const approvalData = data.filter(
     (invoice) => invoice.status === "needing_approval"
-  );
+  ) as NeedingApprovalInvoice[];
+
   const scheduledData = data.filter(
     (invoice) => invoice.status === "scheduled"
   );
@@ -119,7 +126,7 @@ export default function Index() {
             <InboxTable inboxData={inboxData} />
           </Tabs.Content>
           <Tabs.Content value="approval" className="mt-6">
-            dasdas
+            <NeedingApprovalTable needApprovalData={approvalData} />
           </Tabs.Content>{" "}
           <Tabs.Content value="scheduled" className="mt-6">
             scheduled bills
