@@ -86,7 +86,7 @@ const mockInvoices: Invoice[] = [
   {
     id: "1",
     status: "inbox",
-    dueDate: "Apr 19, 2025",
+    dueDate: "Apr 19",
     recipient: "Debug LLC",
     amount: 220.0,
     invoiceNumber: "INV-902",

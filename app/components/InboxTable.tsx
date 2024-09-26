@@ -4,12 +4,11 @@ import clsx from "clsx";
 
 import type { InboxInvoice, Invoice } from "~/api/invoices";
 
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Table from "~/components/Table";
 import * as Toast from "@radix-ui/react-toast";
 
 import { formatCurrency } from "~/lib/utils";
-import { act } from "react-dom/test-utils";
+import { ArrowRight2, DocumentText, Link21 } from "iconsax-react";
 
 type InboxTableProps = {
   inboxData: InboxInvoice[];
@@ -190,50 +189,85 @@ const InboxTable = ({ inboxData }: InboxTableProps) => {
           ))}
         </Table.TableBody>
       </Table.Table>
-      {openDropdown && (
-        <div className="absolute bottom-[250px] right-[296px] z-20 w-[32rem] mx-auto bg-white rounded-xl shadow-md overflow-hidden">
-          <div className="p-6 space-y-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Debug LLC
-                </h2>
-                <p className="text-sm text-gray-500">
-                  Sent by demo@mercury.com
-                </p>
-              </div>
-              <span className="text-xl font-bold text-gray-900">-$220.00</span>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm text-gray-500">Due Apr 19</p>
-              <div>
-                <p className="text-sm font-medium text-gray-700">Invoice #</p>
-                <p className="text-sm text-gray-900">INV-902</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-700">Added on</p>
-                <p className="text-sm text-gray-900">Sep 15</p>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-gray-900">Sales Invoice</p>
-              <p className="text-sm text-gray-700">
-                Please pay the following invoice by the due date.
+      {openDropdown && activeDropdownContent !== null && (
+        <div className="absolute bottom-[250px] right-[296px] z-20 w-[400px] mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+          <div className="flex justify-between items-center px-10 pt-8 pb-6 border-b-[1px] border-[#7073931A]">
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900">
+                {activeDropdownContent.recipient}
+              </h2>
+              <p className="text-sm text-gray-500">
+                Sent by {activeDropdownContent.sentBy}
               </p>
             </div>
-            <div className="bg-gray-50 p-3 rounded-lg flex items-center space-x-3">
-              <span className="text-sm text-gray-600">
+            <div className="flex flex-col items-center">
+              <div>
+                -
+                <span className="text-[15px] text-[#1E1E2A] font-normal">
+                  {formatCurrency(activeDropdownContent.amount)}
+                </span>
+              </div>
+              <span className="text-[#70707d] text-[11px]">
+                Due {activeDropdownContent.dueDate}
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col gap-6 px-10 pt-8 pb-0">
+            <div className="flex flex-col gap-1">
+              <p className="text-[11px] text-[#535461]">Invoice #</p>
+              <p className="text-base text-[#363644]">
+                {activeDropdownContent.invoiceNumber}
+              </p>
+            </div>
+            <div className="flex flex-col gap-1">
+              <p className="text-[11px] text-[#535461]">Added on</p>
+              <p className="text-base text-[#363644]">
+                {activeDropdownContent.addedOn}
+              </p>
+            </div>
+            {activeDropdownContent.email && (
+              <div className="flex flex-col gap-1">
+                <p className="text-[11px] text-[#535461]">Email</p>
+                <p className="text-[14px] text-[#1e1e2a] font-[480]">
+                  {activeDropdownContent.email.title}
+                </p>
+                <p className="text-[15px] text-[#1e1e2a] max-h-[120px] truncate">
+                  Please pay the following invoice by the due
+                </p>
+              </div>
+            )}
+            <div className="flex gap-2 py-3 px-4 border-[1px] border-[#f4f5f9] rounded-lg items-center cursor-pointer">
+              <div className="w-[80px] h-[40px] bg-[#7073931a] px-1 flex items-center justify-center rounded-md">
+                <DocumentText className="size-4 text-[#535461]" />
+              </div>
+              <span className="truncate max-h-10 w-[220px] text-[#1e1e2a] text-xs">
                 demo_invoice-after-ocr-2.pdf
               </span>
             </div>
-            <div className="flex justify-end space-x-3">
-              <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          </div>
+          <div className="w-full justify-center flex gap-2 py-8 px-10 border-b-[1px] border-[#7073931A]">
+            <form action="/?index" method="post">
+              <input
+                type="hidden"
+                name="invoiceIds"
+                value={selectedInvoicesId}
+              />
+              <button className="min-w-[80px] py-2 px-8 min-h-[40px] rounded-[26px] text-[#d03275] bg-[#7073930F] hover:bg-[#15161d0f] font-medium text-sm">
                 Discard
               </button>
-              <button className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 flex items-center">
-                Review
-              </button>
-            </div>
+            </form>
+            <button
+              className="py-2 px-8 flex items-center gap-1 rounded-[26px] text-white bg-[#5266EB] hover:bg-[#5063d9] font-medium text-sm"
+              onClick={() => {
+                window.open("/invoices/demo-invoice-after-ocr.pdf", "_blank");
+              }}
+            >
+              Review
+              <ArrowRight2 className="w-4 h-4 text-[40px] font-bold" />
+            </button>
+          </div>
+          <div className="px-6 py-4">
+            <Link21 className="size-4 text-[#535461]" />
           </div>
         </div>
       )}
